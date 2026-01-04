@@ -1,6 +1,7 @@
 import { useStations } from '@/hooks/useStations'
 import { createContext } from 'react'
 import StationList from './components/StationList'
+import MapView from './components/MapView'
 
 export const StationContext = createContext(null)
 
@@ -16,7 +17,7 @@ const App = () => {
     <StationContext.Provider value={stationContextValue}>
       <div className="grid grid-cols-12">
         <div className="col-span-full md:col-span-7 lg:col-span-8">
-          <div className="h-[50vh] md:h-screen bg-gray-50"></div>
+          <MapView />
         </div>
         <div className="col-span-full md:col-span-5 lg:col-span-4">
           <StationList />
