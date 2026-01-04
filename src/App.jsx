@@ -1,5 +1,5 @@
 import { useStations } from '@/hooks/useStations'
-import { createContext } from 'react'
+import { createContext, useState } from 'react'
 import StationList from './components/StationList'
 import MapView from './components/MapView'
 
@@ -7,10 +7,14 @@ export const StationContext = createContext(null)
 
 const App = () => {
   const { stations, loading, error } = useStations()
+  const [selectedStationId, setSelectedStationId] = useState(null)
+
   const stationContextValue = {
     stations,
     loading,
     error,
+    selectedStationId,
+    setSelectedStationId,
   }
 
   return (
