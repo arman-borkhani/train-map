@@ -9,7 +9,7 @@ const StationList = () => {
   const skeletons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
   return (
-    <div className="py-3 px-4 h-[50vh] md:h-screen overflow-auto">
+    <div className="py-3 px-4 h-full overflow-auto">
       {error && (
         <Alert variant="destructive">
           <AlertTitle>{error}</AlertTitle>

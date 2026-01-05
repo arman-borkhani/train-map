@@ -2,7 +2,7 @@ import { StationContext } from '@/App'
 import { useContext, useEffect, useRef } from 'react'
 import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet'
 
-const Markers = ({ stations, selectedStationId }) => {
+const Markers = ({ stations, selectedStationId, cityFilter }) => {
   const map = useMap()
   const markerRefs = useRef({})
 
@@ -28,6 +28,30 @@ const Markers = ({ stations, selectedStationId }) => {
     }
   }, [selectedStationId, stations, map])
 
+  useEffect(() => {
+    const defaultCenter = [51.17, 10.45]
+    const defaultZoom = 6
+    try {
+      map.setView(defaultCenter, defaultZoom)
+    } catch (e) {
+      map.setView(defaultCenter, defaultZoom)
+    }
+    // close any open popups on markers when filter changes
+    Object.values(markerRefs.current).forEach((marker) => {
+      if (!marker) return
+      if (typeof marker.closePopup === 'function') {
+        try {
+          marker.closePopup()
+        } catch (e) {}
+      } else if (marker.getPopup && typeof marker.getPopup === 'function') {
+        try {
+          const popup = marker.getPopup()
+          popup && popup.remove && popup.remove()
+        } catch (e) {}
+      }
+    })
+  }, [cityFilter, map])
+
   return (
     <>
       {stations.map((station) => (
@@ -46,7 +70,7 @@ const Markers = ({ stations, selectedStationId }) => {
 }
 
 const MapView = () => {
-  const { stations, selectedStationId } = useContext(StationContext)
+  const { stations, selectedStationId, cityFilter } = useContext(StationContext)
 
   return (
     <MapContainer
@@ -59,7 +83,11 @@ const MapView = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {stations.length > 0 && (
-        <Markers stations={stations} selectedStationId={selectedStationId} />
+        <Markers
+          stations={stations}
+          selectedStationId={selectedStationId}
+          cityFilter={cityFilter}
+        />
       )}
     </MapContainer>
   )
